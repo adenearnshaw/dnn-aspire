@@ -1,0 +1,14 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Hello, @context.User.Identity.Name !</h1>
+
+        <p>Welcome to your new app.</p>
+    </Authorized>
+    <NotAuthorized>
+        <p>Not Authorized</p>
+    </NotAuthorized>
+</AuthorizeView>

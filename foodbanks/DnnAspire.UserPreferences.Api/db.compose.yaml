@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+
+  db:
+    image: postgres
+    container_name: dnnaspire-user-db
+    ports:
+      - "7002:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: p0wrd
+      POSTGRES_DB: userPreferencesDb
+    volumes:
+      - "../volumes/postgres/data:/var/lib/postgresql/data"
+
+
+      # docker-compose -f db.compose.yaml -p dnnaspire_base up -d
+      # docker-compose -f db.compose.yaml -p dnnaspire_base down

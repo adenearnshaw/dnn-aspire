@@ -1,0 +1,6 @@
+@DnnAspire.UserPreferences.Api_HostAddress = http://localhost:5201
+
+GET {{DnnAspire.UserPreferences.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
