@@ -1,4 +1,4 @@
-﻿namespace DnnAspire.UserPreferences.Api;
+﻿namespace DnnAspire.UserPreferences.Api.Data;
 
 public class UserPreference
 {
