@@ -9,17 +9,17 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["DnnApsire.Foodbanks.Api/DnnApsire.Foodbanks.Api.csproj", "DnnApsire.Foodbanks.Api/"]
-RUN dotnet restore "./DnnApsire.Foodbanks.Api/DnnApsire.Foodbanks.Api.csproj"
+COPY ["DnnAspire.Foodbanks.Api/DnnAspire.Foodbanks.Api.csproj", "DnnAspire.Foodbanks.Api/"]
+RUN dotnet restore "./DnnAspire.Foodbanks.Api/DnnAspire.Foodbanks.Api.csproj"
 COPY . .
-WORKDIR "/src/DnnApsire.Foodbanks.Api"
-RUN dotnet build "./DnnApsire.Foodbanks.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/DnnAspire.Foodbanks.Api"
+RUN dotnet build "./DnnAspire.Foodbanks.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./DnnApsire.Foodbanks.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./DnnAspire.Foodbanks.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "DnnApsire.Foodbanks.Api.dll"]
+ENTRYPOINT ["dotnet", "DnnAspire.Foodbanks.Api.dll"]

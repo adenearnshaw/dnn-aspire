@@ -1,13 +1,13 @@
 ﻿using System.Text.Json;
 
-namespace DnnApsire.Foodbanks.Api.Foodbanks;
+namespace DnnAspire.Foodbanks.Api.Foodbanks;
 
 public class GiveFoodApiClient
 {
     private readonly HttpClient _httpClient;
     private readonly JsonSerializerOptions _jsonSerializerOptions;
 
-    public GiveFoodApiClient(HttpClient httpClient) 
+    public GiveFoodApiClient(HttpClient httpClient)
     {
         _httpClient = httpClient;
         _jsonSerializerOptions = new JsonSerializerOptions
@@ -21,7 +21,7 @@ public class GiveFoodApiClient
     {
         var request = new HttpRequestMessage(HttpMethod.Get, $"api/2/foodbanks/search/?address={postcode}");
         var response = await _httpClient.SendAsync(request);
-        
+
         response.EnsureSuccessStatusCode();
 
         var result = await response.Content.ReadFromJsonAsync<List<Foodbank>>(_jsonSerializerOptions);

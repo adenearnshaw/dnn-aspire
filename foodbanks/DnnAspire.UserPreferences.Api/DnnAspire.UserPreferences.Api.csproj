@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <InvariantGlobalization>true</InvariantGlobalization>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\DnnApsire.Foodbanks.Api</DockerfileContext>
+    <DockerfileContext>..\DnnAspire.Foodbanks.Api</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>

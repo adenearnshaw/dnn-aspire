@@ -1,6 +1,6 @@
-@DnnApsire.Foodbanks.Api_HostAddress = http://localhost:5078
+@DnnAspire.Foodbanks.Api_HostAddress = http://localhost:5078
 
-GET {{DnnApsire.Foodbanks.Api_HostAddress}}/weatherforecast/
+GET {{DnnAspire.Foodbanks.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###

@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace DnnApsire.Foodbanks.Api.Foodbanks;
+namespace DnnAspire.Foodbanks.Api.Foodbanks;
 
 public record Foodbank
 {
@@ -28,7 +28,7 @@ public record Foodbank
     public List<Location> Locations { get; set; } = new();
 
     public Items ActualItems => Items ?? AlternativeItems ?? new Items { Id = "none", Needs = "None" };
- 
+
     public List<string> NeededItems => ActualItems.Needs.Split(Environment.NewLine).Order().ToList();
 
     public string FormattedDistance

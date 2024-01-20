@@ -1,4 +1,4 @@
-﻿namespace DnnApsire.Foodbanks.Api.Foodbanks.ByPostcode;
+﻿namespace DnnAspire.Foodbanks.Api.Foodbanks.ByPostcode;
 
 public static class FoodbankBySlugEndpoint
 {

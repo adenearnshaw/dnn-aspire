@@ -1,4 +1,4 @@
-using DnnAspire.UserPreferences.Api;
+using DnnAspire.UserPreferences.Api.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

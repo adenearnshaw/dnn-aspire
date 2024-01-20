@@ -1,6 +1,6 @@
-﻿using DnnApsire.Foodbanks.Api.Foodbanks.ByPostcode;
+﻿using DnnAspire.Foodbanks.Api.Foodbanks.ByPostcode;
 
-namespace DnnApsire.Foodbanks.Api.Foodbanks;
+namespace DnnAspire.Foodbanks.Api.Foodbanks;
 
 public static class ConfigureFoodbanksServices
 {

@@ -1,7 +1,7 @@
-﻿namespace DnnApsire.Foodbanks.Api.Foodbanks.ByPostcode;
+﻿namespace DnnAspire.Foodbanks.Api.Foodbanks.ByPostcode;
 
 public class FoodbankBySlugHandler(GiveFoodApiClient apiClient)
 {
-    public async Task<Foodbank> Handle(string slug) 
+    public async Task<Foodbank> Handle(string slug)
         => await apiClient.FoodbankBySlug(slug);
 }
