@@ -10,6 +10,8 @@ using Syncfusion.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -22,12 +24,12 @@ builder.Services.AddTransient<UserPreferencesService>();
 
 builder.Services.AddHttpClient("foodbankClient", opts =>
 {
-    opts.BaseAddress = new Uri("https://localhost:7018");
+    opts.BaseAddress = new Uri("https://foodbanksapi");
 });
 
 builder.Services.AddHttpClient("userPreferencesClient", opts =>
 {
-    opts.BaseAddress = new Uri("https://localhost:7201");
+    opts.BaseAddress = new Uri("https://userpreferencesapi");
 });
 
 builder.Services.AddAuthentication(opts =>
@@ -38,7 +40,9 @@ builder.Services.AddAuthentication(opts =>
 .AddCookie()
 .AddOpenIdConnect(opts =>
 {
-    builder.Configuration.GetSection("OpenIDConnectSettings").Bind(opts);
+    builder.Configuration.GetSection("Services:Idp").Bind(opts);
+
+    opts.RequireHttpsMetadata = false;
 
     opts.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     opts.ResponseType = OpenIdConnectResponseType.Code;
@@ -55,6 +59,8 @@ Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(builder.Configura
 builder.Services.AddSyncfusionBlazor();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
 

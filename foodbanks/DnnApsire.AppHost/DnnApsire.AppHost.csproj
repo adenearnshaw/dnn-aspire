@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>0fcefe91-a795-46a7-9ce3-1248771dc68f</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting" Version="8.0.0-preview.2.23619.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\auth\DnnAspire.Idp\DnnAspire.Idp.csproj" />
+    <ProjectReference Include="..\DnnApsire.Foodbanks.Api\DnnApsire.Foodbanks.Api.csproj" />
+    <ProjectReference Include="..\DnnAspire.Foodbanks.Web\DnnAspire.Foodbanks.Web.csproj" />
+    <ProjectReference Include="..\DnnAspire.UserPreferences.Api\DnnAspire.UserPreferences.Api.csproj" />
+  </ItemGroup>
+
+</Project>
