@@ -1,0 +1,44 @@
+﻿@using DnnAspire.Foodbanks.Web.Models
+
+<div class="card">
+    <div class="card-header">
+        Drop-off locations
+    </div>
+    <div class="card-body">
+        <SfMaps>
+            <MapsZoomSettings ZoomFactor="13" />
+            <MapsCenterPosition Latitude="@(Foodbank?.Latitude ?? 0)"
+                                Longitude="@(Foodbank?.Longitude ?? 0)" />
+            <MapsLayers>
+                <MapsLayer UrlTemplate="https://tile.openstreetmap.org/level/tileX/tileY.png"
+                           TValue="string">
+
+                    @if (Foodbank?.Locations?.Any() ?? false)
+                    {
+                        <MapsMarkerSettings>
+                            <MapsMarker Visible="true" Height="25" Width="25" DataSource="@(Foodbank.Locations)" TValue="FoodbankLocation">
+                            </MapsMarker>
+                        </MapsMarkerSettings>
+                    }
+                </MapsLayer>
+            </MapsLayers>
+        </SfMaps>
+    </div>
+
+    <ul class="list-group list-group-flush">
+        @foreach (var loc in Foodbank?.Locations ?? [])
+        {
+            <li class="list-group-item">@loc.Name</li>
+        }
+    </ul>
+</div>
+
+
+<HeadContent>
+    <script src="_content/Syncfusion.Blazor.Core/scripts/syncfusion-blazor.min.js" type="text/javascript" async defer></script>
+</HeadContent>
+
+@code {
+    [Parameter]
+    public FoodbankModel Foodbank { get; set; } = default;
+}

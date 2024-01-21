@@ -1,0 +1,32 @@
+﻿@page "/foodbank/{slug}"
+
+@inject FoodbanksService FoodbankService
+
+<h3>@SelectedFoodbank?.Name</h3>
+
+<div class="row justify-content-between">
+    <div class="col-12 col-md-6 col-lg-4">
+        <FoodbankNeeds Name="@SelectedFoodbank?.Name"
+                       Needs="@(SelectedFoodbank?.NeededItems ?? [])" />
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-8">
+        <FoodbankLocations Foodbank="@(SelectedFoodbank)" />
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public string? Slug { get; set; }
+
+    public FoodbankModel? SelectedFoodbank { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Slug = Slug ?? "";
+
+        var foodbank = await FoodbankService.GetFoodbankBySlug(Slug);
+        SelectedFoodbank = foodbank;
+    }
+}

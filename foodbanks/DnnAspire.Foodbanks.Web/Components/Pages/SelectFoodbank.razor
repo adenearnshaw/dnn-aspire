@@ -1,0 +1,65 @@
+﻿@page "/foodbanks/{postcode}"
+
+@inject FoodbanksService FoodbankService
+@inject NavigationManager NavigationManager
+
+
+<div class="row justify-content-between">
+    <div class="col-12 col-md-6">
+        <h3>Foodbanks near @FormattedPostcode</h3>
+    </div>
+
+    <div class="col-12 col-md-3">
+        <form method="post" @onsubmit="Submit" @formname="postcode-entry-form">
+            <AntiforgeryToken />
+
+            <div class="input-group  mb-3">
+                <InputText @bind-Value="SearchPostcode" id="inputPostcode" class="form-control" type="text" placeholder="Postcode" aria-label="Postcode Input" />
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="search-results-container row">
+    @foreach (var foodbank in SearchResults)
+    {
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-body">
+
+                    <h4 class="card-title">@foodbank.Name</h4>
+                    <p class="card-subtitle mb-2 text-muted">@foodbank.FormattedDistance from you</p>
+                    <p class="card-text">@foodbank.Address</p>
+                    <a href="/foodbank/@foodbank.Slug" class="btn btn-primary">Select foodbank</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+
+    [Parameter]
+    public string? Postcode { get; set; }
+
+    [SupplyParameterFromForm]
+    public string? SearchPostcode { get; set; }
+
+    private List<FoodbankSearchModel> SearchResults = [];
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Postcode = Postcode ?? "";
+
+        var foodbanks = await FoodbankService.SearchFoodbanksByPostcode(Postcode);
+        SearchResults = foodbanks.OrderBy(f => f.Distance).ToList();
+    }
+
+    private void Submit()
+    {
+        NavigationManager.NavigateTo($"foodbanks/{SearchPostcode}");
+    }
+
+    private string? FormattedPostcode => Postcode?.ToUpper()?.Insert(Postcode.Length - 3, " ");
+}

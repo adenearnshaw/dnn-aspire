@@ -20,16 +20,19 @@ public record Foodbank
     public int? Distance { get; set; }
 
     [JsonPropertyName("needs")]
-    private Items? Items { get; set; } = default;
+    public Items? Items { get; set; } = default;
 
     [JsonPropertyName("need")]
-    private Items? AlternativeItems { get; set; } = default;
+    public Items? AlternativeItems { get; set; } = default;
 
     public List<Location> Locations { get; set; } = new();
 
     public Items ActualItems => Items ?? AlternativeItems ?? new Items { Id = "none", Needs = "None" };
 
-    public List<string> NeededItems => ActualItems.Needs.Split(Environment.NewLine).Order().ToList();
+    public List<string> NeededItems => ActualItems.Needs
+                                                  .Split(new string[] {"\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries)
+                                                  .Order()
+                                                  .ToList();
 
     public string FormattedDistance
     {
@@ -37,10 +40,10 @@ public record Foodbank
         {
             if (Distance is null)
             {
-                return "Unknown distance from you";
+                return "";
             }
 
-            return $"{(Distance / 1609.344):0.##} miles from you";
+            return $"{(Distance / 1609.344):0.##} miles";
         }
     }
 }

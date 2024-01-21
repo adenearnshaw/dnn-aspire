@@ -1,15 +1,22 @@
 using DnnAspire.Foodbanks.Web.Components;
-using DnnAspire.Foodbanks.Web.Configuration;
+using DnnAspire.Foodbanks.Web.Services;
+using Syncfusion.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
-
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.ConfigureAuthentication();
+builder.Services.AddTransient<FoodbanksService>();
+
+builder.Services.AddHttpClient("downstream_client", opts =>
+{
+    opts.BaseAddress = new Uri("https://localhost:7018");
+});
+
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(builder.Configuration["Syncfusion:ApiKey"]);
+builder.Services.AddSyncfusionBlazor();
 
 var app = builder.Build();
 
@@ -25,9 +32,6 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
-
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
