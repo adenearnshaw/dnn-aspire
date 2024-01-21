@@ -1,5 +1,4 @@
 ﻿using DnnAspire.UserPreferences.Api.Data;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DnnAspire.UserPreferences.Api.UserPreferences.Get;
 

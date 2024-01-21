@@ -2,7 +2,8 @@
 
 @inject FoodbanksService FoodbankService
 @inject NavigationManager NavigationManager
-
+@inject UserPreferencesService PreferencesService
+@inject IHttpContextAccessor httpContextAccessor
 
 <div class="row justify-content-between">
     <div class="col-12 col-md-6">
@@ -31,7 +32,7 @@
                     <h4 class="card-title">@foodbank.Name</h4>
                     <p class="card-subtitle mb-2 text-muted">@foodbank.FormattedDistance from you</p>
                     <p class="card-text">@foodbank.Address</p>
-                    <a href="/foodbank/@foodbank.Slug" class="btn btn-primary">Select foodbank</a>
+                    <button @onclick="() => ShowFoodbank(foodbank.Slug)" class="btn btn-primary">Select foodbank</button>
                 </div>
             </div>
         </div>
@@ -59,6 +60,19 @@
     private void Submit()
     {
         NavigationManager.NavigateTo($"foodbanks/{SearchPostcode}");
+    }
+
+    private async Task ShowFoodbank(string slug)
+    {
+        if (httpContextAccessor?.HttpContext?.User?.Identity?.IsAuthenticated ?? false)
+        {
+            await PreferencesService.UpdateUserPreferences(slug);
+            NavigationManager.NavigateTo($"/");
+        }
+        else
+        {
+            NavigationManager.NavigateTo($"foodbank/{slug}");
+        }
     }
 
     private string? FormattedPostcode => Postcode?.ToUpper()?.Insert(Postcode.Length - 3, " ");

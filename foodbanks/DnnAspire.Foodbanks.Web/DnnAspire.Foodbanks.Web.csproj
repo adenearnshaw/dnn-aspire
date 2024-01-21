@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="AzureMapsControl.Components" Version="1.14.0" />
     <PackageReference Include="Darnton.Blazor.DeviceInterop" Version="0.1.2" />
+    <PackageReference Include="IdentityModel" Version="6.2.0" />
     <PackageReference Include="Syncfusion.Blazor.Maps" Version="24.1.46" />
   </ItemGroup>
 

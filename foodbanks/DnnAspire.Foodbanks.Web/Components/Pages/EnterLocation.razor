@@ -1,31 +1,37 @@
 ﻿@page "/search"
 @inject NavigationManager NavigationManager
 
-<div class="hero-image-container">
-    <div class="hero-image-wrapper">
-        <img src="img/foodbank_hero.webp" alt="hero image of food being shared by people" />
+<div class="container text-center">
+    <div class="hero-image-container mb-4">
+        <div class="hero-image-wrapper">
+            <img src="img/foodbank_hero.webp" alt="hero image of food being shared by people" />
+        </div>
+
     </div>
+
+    <h3>Welcome</h3>
+
+    <p>To get started, please tell us your postcode.</p>
+
+
+
+
+    <form method="post" @onsubmit="Submit" @formname="postcode-entry-form">
+        <AntiforgeryToken />
+        <div class="row justify-content-center gy-2">
+            <div class="col-12 col-lg-4">
+                <label for="inputPostcode" class="visually-hidden">Postcode</label>
+                <InputText @bind-Value="Postcode" id="inputPostcode" class="form-control form-control-lg" type="text" placeholder="Postcode" aria-label="Postcode Input" />
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary mb-3">Find food banks near me</button>
+            </div>
+        </div>
+    </form>
+
 
 </div>
-
-<h3>Welcome</h3>
-
-<p>To get started, please tell us your postcode.</p>
-
-
-<form method="post" @onsubmit="Submit" @formname="postcode-entry-form">
-    <AntiforgeryToken />
-
-    <div class="col-12">
-        <label for="inputPostcode" class="visually-hidden">Postcode</label>
-        <InputText @bind-Value="Postcode" id="inputPostcode" class="form-control form-control-lg" type="text" placeholder="Postcode" aria-label="Postcode Input" />
-    </div>
-
-    <div class="col-12">
-        <button type="submit" class="btn btn-primary mb-3">Find food banks near me</button>
-    </div>
-
-</form>
 
 @code {
     [SupplyParameterFromForm]

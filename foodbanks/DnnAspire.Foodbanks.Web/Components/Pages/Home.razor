@@ -1,7 +1,24 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+@inject UserPreferencesService PreferencesService
 
-<h1>Hello, world!</h1>
+<PageTitle>Share A Meal</PageTitle>
 
-Welcome to your new app.
+@if (UserPreferences is null || string.IsNullOrEmpty(UserPreferences.PreferredFoodbankSlug))
+{
+    <EnterLocation ></EnterLocation>
+}
+else 
+{
+    <Foodbank Slug="@UserPreferences.PreferredFoodbankSlug" ></Foodbank>
+}
+
+
+@code {
+    public UserPreferencesModel? UserPreferences { get; set; }
+
+    protected override async Task OnInitializedAsync() 
+    {
+        UserPreferences = await PreferencesService.GetUserPreferences();
+    }
+}

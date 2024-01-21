@@ -6,7 +6,7 @@ public class FoodbanksService(IHttpClientFactory clientFactory)
 {
     public async Task<List<FoodbankSearchModel>> SearchFoodbanksByPostcode(string postcode)
     {
-        var client = clientFactory.CreateClient("downstream_client");
+        var client = clientFactory.CreateClient("foodbankClient");
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/foodbanks/postcode/{postcode}");
 
@@ -21,7 +21,7 @@ public class FoodbanksService(IHttpClientFactory clientFactory)
 
     public async Task<FoodbankModel?> GetFoodbankBySlug(string slug)
     {
-        var client = clientFactory.CreateClient("downstream_client");
+        var client = clientFactory.CreateClient("foodbankClient");
 
         var request = new HttpRequestMessage(HttpMethod.Get, $"/foodbank/{slug}");
 

@@ -1,0 +1,14 @@
+﻿.hero-image-wrapper > img {
+    border-radius: 50%;
+    object-fit: cover;
+    width: 30vw;
+    height: 30vw;
+    max-width: 500px;
+    max-height: 500px;
+    aspect-ratio: 1/1;
+}
+
+.btn-primary {
+    background-color: #70bb67;
+    border: 1px solid #509249;
+}

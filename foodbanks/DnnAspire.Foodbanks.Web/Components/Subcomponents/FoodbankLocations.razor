@@ -13,13 +13,9 @@
                 <MapsLayer UrlTemplate="https://tile.openstreetmap.org/level/tileX/tileY.png"
                            TValue="string">
 
-                    @if (Foodbank?.Locations?.Any() ?? false)
-                    {
-                        <MapsMarkerSettings>
-                            <MapsMarker Visible="true" Height="25" Width="25" DataSource="@(Foodbank.Locations)" TValue="FoodbankLocation">
-                            </MapsMarker>
-                        </MapsMarkerSettings>
-                    }
+                    <MapsMarkerSettings>
+                        <MapsMarker Visible="true" DataSource="@Markers" Height="25" Width="25" TValue="FoodbankMarker"></MapsMarker>
+                    </MapsMarkerSettings>
                 </MapsLayer>
             </MapsLayers>
         </SfMaps>
@@ -41,4 +37,41 @@
 @code {
     [Parameter]
     public FoodbankModel Foodbank { get; set; } = default;
+
+    public List<FoodbankMarker> Markers
+    {
+        get
+        {
+            var markers = new List<FoodbankMarker>();
+
+            if (Foodbank is not null)
+            {
+                markers.Add(new FoodbankMarker
+                    {
+                        Name = Foodbank.Name,
+                        Latitude = Foodbank.Latitude,
+                        Longitude = Foodbank.Longitude
+                    });
+
+                if (Foodbank?.Locations?.Any() ?? false)
+                {
+                    markers.AddRange(Foodbank.Locations.Select(l => new FoodbankMarker
+                        {
+                            Name = l.Name,
+                            Latitude = l.Latitude,
+                            Longitude = l.Longitude
+                        }));
+                }
+            }
+
+            return markers;
+        }
+    }
+
+    public class FoodbankMarker
+    {
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public string Name { get; set; }
+    }
 }
