@@ -48,7 +48,6 @@ public record Foodbank
     }
 }
 
-
 public record Location
 {
     public string Id { get; set; }

@@ -15,4 +15,8 @@
     <PackageReference Include="Syncfusion.Blazor.Maps" Version="24.1.46" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DnnApsire.ServiceDefaults\DnnApsire.ServiceDefaults.csproj" />
+  </ItemGroup>
+
 </Project>
