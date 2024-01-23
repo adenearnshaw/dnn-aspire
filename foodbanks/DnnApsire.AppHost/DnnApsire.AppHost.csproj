@@ -14,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\auth\DnnAspire.Idp\DnnAspire.Idp.csproj" />
     <ProjectReference Include="..\DnnApsire.Foodbanks.Api\DnnApsire.Foodbanks.Api.csproj" />
     <ProjectReference Include="..\DnnAspire.Foodbanks.Web\DnnAspire.Foodbanks.Web.csproj" />
     <ProjectReference Include="..\DnnAspire.UserPreferences.Api\DnnAspire.UserPreferences.Api.csproj" />

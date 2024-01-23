@@ -1,6 +1,9 @@
-@DnnAspire.Foodbanks.Api_HostAddress = http://localhost:5078
+@DnnAspire.Foodbanks.Api_HostAddress = https://localhost:7018
 
-GET {{DnnAspire.Foodbanks.Api_HostAddress}}/weatherforecast/
+GET {{DnnAspire.Foodbanks.Api_HostAddress}}/foodbank/southport
 Accept: application/json
 
 ###
+
+GET {{DnnAspire.Foodbanks.Api_HostAddress}}/foodbanks/postcode/pr17pp
+Accept: application/json

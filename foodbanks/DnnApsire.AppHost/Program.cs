@@ -5,7 +5,8 @@ var postgresdb = builder.AddPostgresContainer("postgres", password: postgresPass
                         .WithVolumeMount("../volumes/postgres/data", "/var/lib/postgresql/data", VolumeMountType.Bind)
                         .AddDatabase("userPreferencesDb");
 
-var idp = builder.AddProject<Projects.DnnAspire_Idp>("idp");
+var idp = builder.AddProject(name: "idp",
+                             projectPath: "../../auth/DnnAspire.Idp/DnnAspire.Idp.csproj");
 
 var foodbanksApi = builder.AddProject<Projects.DnnApsire_Foodbanks_Api>("foodbanksapi");
 
