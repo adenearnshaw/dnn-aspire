@@ -18,9 +18,10 @@ var kcPassword = builder.AddParameter("kcPassword", secret: true);
 
 var keycloak = builder.AddKeycloak("idp", 7001, kcUsername, kcPassword)
     .WithDataVolume()
-    .WithRealmImport("./Keycloak");
-    //.WithLifetime(ContainerLifetime.Persistent);
+    .WithRealmImport("./Keycloak")
+    .WithLifetime(ContainerLifetime.Persistent);
 
+// Backend Services
 var foodbanksApi = builder.AddProject<Projects.DnnApsire_Foodbanks_Api>("foodbanksapi")
     .WithHttpsHealthCheck("/health");
 
@@ -29,6 +30,7 @@ var userPreferencesApi = builder.AddProject<Projects.DnnAspire_UserPreferences_A
     .WaitFor(postgresDb)
     .WithHttpsHealthCheck("/health");
 
+// Frontend
 builder.AddProject<Projects.DnnAspire_Foodbanks_Web>("foodbanksweb")
        .WithExternalHttpEndpoints()
        .WithReference(keycloak)
