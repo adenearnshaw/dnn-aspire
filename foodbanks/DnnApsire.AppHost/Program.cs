@@ -1,3 +1,5 @@
+using DnnApsire.AppHost;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 // Postgres
@@ -7,8 +9,8 @@ var pgPassword = builder.AddParameter("pgPassword", secret: true);
 var postgres = builder.AddPostgres("postgres", pgUsername, pgPassword)
     .WithDataBindMount(source: "../volumes/postgres/data", isReadOnly: false)
     .WithLifetime(ContainerLifetime.Persistent)
-    .WithPgAdmin()
-    .WithPgWeb();
+    .WithPgAdmin(opts => opts.WithLifetime(ContainerLifetime.Persistent))
+    .WithPgWeb(opts => opts.WithLifetime(ContainerLifetime.Persistent));
 
 var postgresDb = postgres.AddDatabase("userPreferencesDb");
 
@@ -28,7 +30,8 @@ var foodbanksApi = builder.AddProject<Projects.DnnApsire_Foodbanks_Api>("foodban
 var userPreferencesApi = builder.AddProject<Projects.DnnAspire_UserPreferences_Api>("userpreferencesapi")
     .WithReference(postgresDb)
     .WaitFor(postgresDb)
-    .WithHttpsHealthCheck("/health");
+    .WithHttpsHealthCheck("/health")
+    .WithHttpsCommand("/userpreferences/remove-all", "Reset Database", iconName: "DatabaseLightning");
 
 // Frontend
 builder.AddProject<Projects.DnnAspire_Foodbanks_Web>("foodbanksweb")

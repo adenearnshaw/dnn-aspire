@@ -1,0 +1,100 @@
+// MIT License
+// Copyright (c) 2023 Damian Edwards
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+//     of this software and associated documentation files (the "Software"), to deal
+//     in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+//     furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+//     copies or substantial portions of the Software.
+// 
+//     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+using Microsoft.Extensions.DependencyInjection;
+
+namespace DnnApsire.AppHost;
+
+internal static class ResourceBuilderExtensions
+{
+    /// <summary>
+    /// Adds a command to the resource that sends an HTTP request to the specified path.
+    /// </summary>
+    public static IResourceBuilder<TResource> WithHttpsCommand<TResource>(this IResourceBuilder<TResource> builder,
+        string path,
+        string displayName,
+        HttpMethod? method = default,
+        string? endpointName = default,
+        string? iconName = default)
+        where TResource : IResourceWithEndpoints
+        => WithHttpCommandImpl(builder, path, displayName, endpointName ?? "https", method, "https", iconName);
+
+    /// <summary>
+    /// Adds a command to the resource that sends an HTTP request to the specified path.
+    /// </summary>
+    public static IResourceBuilder<TResource> WithHttpCommand<TResource>(this IResourceBuilder<TResource> builder,
+        string path,
+        string displayName,
+        HttpMethod? method = default,
+        string? endpointName = default,
+        string? iconName = default)
+        where TResource : IResourceWithEndpoints
+        => WithHttpCommandImpl(builder, path, displayName, endpointName ?? "http", method, "http", iconName);
+
+    private static IResourceBuilder<TResource> WithHttpCommandImpl<TResource>(this IResourceBuilder<TResource> builder,
+        string path,
+        string displayName,
+        string endpointName,
+        HttpMethod? method,
+        string expectedScheme,
+        string? iconName = default)
+        where TResource : IResourceWithEndpoints
+    {
+        method ??= HttpMethod.Post;
+
+        var endpoints = builder.Resource.GetEndpoints();
+        var endpoint = endpoints.FirstOrDefault(e => string.Equals(e.EndpointName, endpointName, StringComparison.OrdinalIgnoreCase))
+            ?? throw new DistributedApplicationException($"Could not create HTTP command for resource '{builder.Resource.Name}' as no endpoint named '{endpointName}' was found.");
+
+        var commandType = $"http-{method.Method.ToLowerInvariant()}-request";
+
+        builder.WithCommand(commandType, displayName, async context =>
+        {
+            if (!endpoint.IsAllocated)
+            {
+                return new ExecuteCommandResult { Success = false, ErrorMessage = "Endpoints are not yet allocated." };
+            }
+
+            if (!string.Equals(endpoint.Scheme, expectedScheme, StringComparison.OrdinalIgnoreCase))
+            {
+                return new ExecuteCommandResult { Success = false, ErrorMessage = $"The endpoint named '{endpointName}' on resource '{builder.Resource.Name}' does not have the expected scheme of '{expectedScheme}'." };
+            }
+
+            var uri = new UriBuilder(endpoint.Url) { Path = path }.Uri;
+            var httpClient = context.ServiceProvider.GetRequiredService<IHttpClientFactory>().CreateClient();
+            var request = new HttpRequestMessage(method, uri);
+            try
+            {
+                var response = await httpClient.SendAsync(request, context.CancellationToken);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                return new ExecuteCommandResult { Success = false, ErrorMessage = ex.Message };
+            }
+            return new ExecuteCommandResult { Success = true };
+        },
+        iconName: iconName,
+        iconVariant: IconVariant.Regular);
+
+        return builder;
+    }
+}
