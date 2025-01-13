@@ -11,7 +11,7 @@ builder.Services.AddProblemDetails();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddUserPreferencesServices();
+builder.AddUserPreferencesServices();
 
 builder.Services.AddSingleton<AppDbInitializer>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<AppDbInitializer>());
