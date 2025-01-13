@@ -5,20 +5,22 @@
         Drop-off locations
     </div>
     <div class="card-body">
-        <SfMaps>
-            <MapsZoomSettings ZoomFactor="13" />
-            <MapsCenterPosition Latitude="@(Foodbank?.Latitude ?? 0)"
-                                Longitude="@(Foodbank?.Longitude ?? 0)" />
-            <MapsLayers>
-                <MapsLayer UrlTemplate="https://tile.openstreetmap.org/level/tileX/tileY.png"
-                           TValue="string">
+        <div class="map-container">
+            <SfMaps>
+                <MapsZoomSettings ZoomFactor="13"/>
+                <MapsCenterPosition Latitude="@(Foodbank?.Latitude ?? 0)"
+                                    Longitude="@(Foodbank?.Longitude ?? 0)"/>
+                <MapsLayers>
+                    <MapsLayer UrlTemplate="https://tile.openstreetmap.org/level/tileX/tileY.png"
+                               TValue="string">
 
-                    <MapsMarkerSettings>
-                        <MapsMarker Visible="true" DataSource="@Markers" Height="25" Width="25" TValue="FoodbankMarker"></MapsMarker>
-                    </MapsMarkerSettings>
-                </MapsLayer>
-            </MapsLayers>
-        </SfMaps>
+                        <MapsMarkerSettings>
+                            <MapsMarker Visible="true" DataSource="@Markers" Height="25" Width="25" TValue="FoodbankMarker"></MapsMarker>
+                        </MapsMarkerSettings>
+                    </MapsLayer>
+                </MapsLayers>
+            </SfMaps>
+        </div>
     </div>
 
     <ul class="list-group list-group-flush">
