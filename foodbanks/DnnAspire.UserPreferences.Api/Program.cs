@@ -6,11 +6,12 @@ builder.AddServiceDefaults();
 builder.AddNpgsqlDbContext<AppDbContext>("userPreferencesDb");
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddProblemDetails();
 
-builder.Services.AddUserPreferencesServices();
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddOpenApi();
+
+builder.AddUserPreferencesServices();
 
 builder.Services.AddSingleton<AppDbInitializer>();
 builder.Services.AddHostedService(sp => sp.GetRequiredService<AppDbInitializer>());
@@ -22,8 +23,7 @@ app.MapDefaultEndpoints();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
 }
 
 app.UseHttpsRedirection();

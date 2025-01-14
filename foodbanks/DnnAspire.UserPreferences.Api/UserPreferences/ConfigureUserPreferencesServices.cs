@@ -1,23 +1,34 @@
-﻿using DnnAspire.UserPreferences.Api.UserPreferences.Get;
+﻿using DnnAspire.UserPreferences.Api.UserPreferences.Clear;
+using DnnAspire.UserPreferences.Api.UserPreferences.Get;
 using DnnAspire.UserPreferences.Api.UserPreferences.Save;
 
 namespace DnnAspire.UserPreferences.Api.UserPreferences;
 
 public static class ConfigureUserPreferencesServices
 {
-    public static IServiceCollection AddUserPreferencesServices(this IServiceCollection services)
+    public static IHostApplicationBuilder AddUserPreferencesServices(this IHostApplicationBuilder builder)
     {
-        services.AddTransient<GetUserPreferencesHandler>();
-        services.AddTransient<SaveUserPreferencesHandler>();
+        builder.Services.AddTransient<GetUserPreferencesHandler>();
+        builder.Services.AddTransient<SaveUserPreferencesHandler>();
 
-        return services;
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Services.AddTransient<ClearUserPreferencesHandler>();
+        }
+        
+        return builder;
     }
 
-    public static IEndpointRouteBuilder MapUserPreferencesEndpoints(this IEndpointRouteBuilder endpoints)
+    public static WebApplication MapUserPreferencesEndpoints(this WebApplication app)
     {
-        endpoints.MapGetUserPreferencesEndpoint();
-        endpoints.MapSaveUserPreferencesEndpoint();
+        app.MapGetUserPreferencesEndpoint();
+        app.MapSaveUserPreferencesEndpoint();
 
-        return endpoints;
+        if (app.Environment.IsDevelopment())
+        {
+            app.MapClearUserPreferencesEndpoint();
+        }
+        
+        return app;
     }
 }

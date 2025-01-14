@@ -1,21 +1,45 @@
+using DnnApsire.AppHost;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
-var postgresPassword = "p0wrd";
-var postgresdb = builder.AddPostgresContainer("postgres", password: postgresPassword)
-                        .WithVolumeMount("../volumes/postgres/data", "/var/lib/postgresql/data", VolumeMountType.Bind)
-                        .AddDatabase("userPreferencesDb");
+// Postgres
+var pgUsername = builder.AddParameter("pgUsername", secret: true);
+var pgPassword = builder.AddParameter("pgPassword", secret: true);
 
-var idp = builder.AddProject(name: "idp",
-                             projectPath: "../../auth/DnnAspire.Idp/DnnAspire.Idp.csproj");
+var postgres = builder.AddPostgres("postgres", pgUsername, pgPassword)
+    .WithDataBindMount(source: "../volumes/postgres/data", isReadOnly: false)
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithPgAdmin(opts => opts.WithLifetime(ContainerLifetime.Persistent))
+    .WithPgWeb(opts => opts.WithLifetime(ContainerLifetime.Persistent));
 
-var foodbanksApi = builder.AddProject<Projects.DnnApsire_Foodbanks_Api>("foodbanksapi");
+var postgresDb = postgres.AddDatabase("userPreferencesDb");
+
+// Keycloak Server
+var kcUsername = builder.AddParameter("kcUsername", secret: true);
+var kcPassword = builder.AddParameter("kcPassword", secret: true);
+
+var keycloak = builder.AddKeycloak("idp", 7001, kcUsername, kcPassword)
+    .WithDataVolume()
+    .WithRealmImport("./Keycloak")
+    .WithLifetime(ContainerLifetime.Persistent);
+
+// Backend Services
+var foodbanksApi = builder.AddProject<Projects.DnnApsire_Foodbanks_Api>("foodbanksapi")
+    .WithHttpsHealthCheck("/health");
 
 var userPreferencesApi = builder.AddProject<Projects.DnnAspire_UserPreferences_Api>("userpreferencesapi")
-                                .WithReference(postgresdb);
+    .WithReference(postgresDb)
+    .WaitFor(postgresDb)
+    .WithHttpsHealthCheck("/health")
+    .WithHttpsCommand("/userpreferences/remove-all", "Reset Database", iconName: "DatabaseLightning");
 
+// Frontend
 builder.AddProject<Projects.DnnAspire_Foodbanks_Web>("foodbanksweb")
-       .WithReference(idp)
+       .WithExternalHttpEndpoints()
+       .WithReference(keycloak)
        .WithReference(foodbanksApi)
-       .WithReference(userPreferencesApi);
+       .WithReference(userPreferencesApi)
+       .WaitFor(userPreferencesApi)
+       .WaitFor(foodbanksApi);
 
 builder.Build().Run();
